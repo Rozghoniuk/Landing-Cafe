@@ -1,3 +1,5 @@
+// -------------TABS----------------
+
 function toggleTabs(tabTag, navTag, activeClass) {
 let tab = document.querySelectorAll(tabTag);
 let arrP = document.querySelectorAll(navTag);
@@ -24,7 +26,44 @@ function removeActiveClass() {
 }
 toggleTabs('.tabcontent', '.tabheader__item', 'tabheader__item_active');
 
-console.log('hello');
+// ------------MODAL-----------------
 
+let modal = document.querySelector('.modal');
+let btnsOpenModal = document.querySelectorAll('[data-modal]');
+let btnCloseModal = document.querySelector('[data-close]');
+let body = document.body;
+let timerForModal;
 
+function openModal() {
+  modal.style.display = "block";
+  body.style.cssText = 'overflow:hidden; padding-right:18px';
+  clearTimeout(timerForModal);
+}
 
+function closeModal() {
+  modal.style.display = "none";
+  body.style.cssText = 'overflow:visible; padding-right:0';
+}
+
+function openModalByScroll() {
+  if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+    openModal();
+    window.removeEventListener('scroll', openModalByScroll);
+  }
+}
+
+btnsOpenModal.forEach(el => el.addEventListener('click', openModal));
+
+btnCloseModal.addEventListener('click', closeModal);
+
+modal.addEventListener('click', (event) => { 
+  if (event.target === modal) closeModal();
+})
+
+document.addEventListener('keydown', (event) => { 
+  if(event.code==='Escape') closeModal();
+})
+
+timerForModal = setTimeout(openModal, 5000);
+
+window.addEventListener('scroll', openModalByScroll)
