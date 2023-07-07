@@ -67,3 +67,49 @@ document.addEventListener('keydown', (event) => {
 timerForModal = setTimeout(openModal, 5000);
 
 window.addEventListener('scroll', openModalByScroll)
+
+// ----------------Slider-------------------------
+
+let btnLeft = document.querySelector(".offer__slider-prev")
+let btnRight = document.querySelector(".offer__slider-next")
+let slides = document.querySelectorAll(".offer__slide")
+let current = document.querySelector("#current")
+let total = document.querySelector("#total")
+let count = 0;
+// let track = document.querySelector(".offer__slider-track")
+
+// track.style.cssText = `display:flex;`
+
+current.innerHTML = count+1;
+
+function disableSlides() {
+  slides.forEach(el => {
+    el.style.display = "none"
+  })
+}
+disableSlides();
+
+slides[count].style.display = "block";
+
+btnRight.addEventListener('click', () => {
+  if (count == slides.length-1) {
+    count = 0;
+  } else {
+    count++;
+  }
+  disableSlides();
+  slides[count].style.display = "block";
+  current.innerHTML = count+1;
+})
+
+btnLeft.addEventListener('click', () => {
+  if (count == 0) {
+    count = slides.length - 1
+  } else {
+    count--;
+  }
+  disableSlides();
+  slides[count].style.display = "block";
+  current.innerHTML = count+1;
+})
+
