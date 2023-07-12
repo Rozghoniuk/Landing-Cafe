@@ -70,46 +70,95 @@ window.addEventListener('scroll', openModalByScroll)
 
 // ----------------Slider-------------------------
 
+let wrapper = document.querySelector(".offer__slider-wrapper")
 let btnLeft = document.querySelector(".offer__slider-prev")
 let btnRight = document.querySelector(".offer__slider-next")
 let slides = document.querySelectorAll(".offer__slide")
 let current = document.querySelector("#current")
 let total = document.querySelector("#total")
-let count = 0;
-// let track = document.querySelector(".offer__slider-track")
+let count = 1;
+let track = document.querySelector(".offer__slider-track")
+let width = window.getComputedStyle(wrapper).width
+let widthSlide = +width.slice(0, width.length - 2)
+let offSet = 0;
 
-// track.style.cssText = `display:flex;`
+track.style.cssText = `display:flex; width:${100 * slides.length}%; transition:all 0.5s;`;
+wrapper.style.overflow = "hidden";
+current.innerText = changeNum(count);
+total.innerText = changeNum(slides.length);
 
-current.innerHTML = count+1;
 
-function disableSlides() {
-  slides.forEach(el => {
-    el.style.display = "none"
-  })
-}
-disableSlides();
-
-slides[count].style.display = "block";
-
-btnRight.addEventListener('click', () => {
-  if (count == slides.length-1) {
-    count = 0;
+function pressRight() {
+  if (offSet >= widthSlide*(slides.length-1)) {
+    offSet = 0;
+    count = 1;
   } else {
+    offSet += widthSlide
     count++;
   }
-  disableSlides();
-  slides[count].style.display = "block";
-  current.innerHTML = count+1;
-})
+  current.innerText = changeNum(count);
+  track.style.transform = `translateX(-${offSet}px)`
 
-btnLeft.addEventListener('click', () => {
-  if (count == 0) {
-    count = slides.length - 1
+}
+
+function pressLeft() {
+  if (offSet <= 0) {
+    offSet = widthSlide * (slides.length - 1);
+    count=slides.length
   } else {
+    offSet -= widthSlide;
     count--;
   }
-  disableSlides();
-  slides[count].style.display = "block";
-  current.innerHTML = count+1;
-})
+  current.innerText = changeNum(count);
+  track.style.transform = `translateX(-${offSet}px)`
+}
+
+function changeNum(num) {
+  if (num < 10) {
+    return `0${num}`
+  } else { 
+    return num
+  }
+}
+
+btnRight.addEventListener("click", pressRight)
+btnLeft.addEventListener("click", pressLeft)
+
+
+
+
+
+
+// current.innerHTML = count+1;
+
+// function disableSlides() {
+//   slides.forEach(el => {
+//     el.style.display = "none"
+//   })
+// }
+// disableSlides();
+
+// slides[count].style.display = "block";
+
+// btnRight.addEventListener('click', () => {
+//   if (count == slides.length-1) {
+//     count = 0;
+//   } else {
+//     count++;
+//   }
+//   disableSlides();
+//   slides[count].style.display = "block";
+//   current.innerHTML = count+1;
+// })
+
+// btnLeft.addEventListener('click', () => {
+//   if (count == 0) {
+//     count = slides.length - 1
+//   } else {
+//     count--;
+//   }
+//   disableSlides();
+//   slides[count].style.display = "block";
+//   current.innerHTML = count+1;
+// })
 
