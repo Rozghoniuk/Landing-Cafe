@@ -162,3 +162,103 @@ btnLeft.addEventListener("click", pressLeft)
 //   current.innerHTML = count+1;
 // })
 
+// ----------------calculating--------------------
+
+let genders = document.querySelectorAll('#gender .calculating__choose-item');
+let height = document.querySelector('#height');
+let weight = document.querySelector('#weight');
+let age = document.querySelector('#age');
+let activities = document.querySelectorAll(".calculating__choose_big .calculating__choose-item");
+let calculatingResult = document.querySelector(".calculating__result span");
+let genderActive = 'woman';
+let result;
+let activitiesActive = 1.375;
+
+function calculate() {
+  if (height.value && weight.value && age.value) {
+    switch (genderActive) {
+      case "woman":
+        result = 447.6 + (9.2 * weight.value) + (3.1 * height.value) - (4.3 * age.value);
+        break;
+      case "man":
+        result = 88.36 + (13.4 * weight.value) + (4.8 * height.value) - (5.7 * age.value);
+        break;
+    }
+    if (!isNaN(result)) {
+      calculatingResult.innerText = Math.floor(result * activitiesActive);
+    } else {
+      calculatingResult.innerText = "___";
+    }
+    
+  } else {
+    calculatingResult.innerText = "___";
+   }
+
+  }
+
+function addActiveClass(selector) {
+    selector.classList.add("calculating__choose-item_active");
+}
+  
+function removeActiveClass(selectors) {
+  selectors.forEach((el) => {el.classList.remove("calculating__choose-item_active")})
+}
+
+function validate(input) {
+  if (input.value.match(/\D/g)) {
+    input.style.border = "1px solid red";
+  } else { 
+    input.style.border = "none";
+  }
+  calculate();
+}
+
+genders.forEach((el) => { 
+  el.addEventListener("click", (event) => {
+    removeActiveClass(genders);
+    addActiveClass(el);
+    switch (event.target.id) {
+      case "woman":
+        genderActive = 'woman'
+        break;
+      
+      case "man":
+        genderActive = 'man'
+        break;
+    
+    }
+    calculate();
+   })
+})
+
+activities.forEach((el) => { 
+  el.addEventListener('click', (event) => { 
+    removeActiveClass(activities);
+    addActiveClass(el);
+    switch (event.target.id) {
+      case "low":
+        activitiesActive = 1.2
+        break;
+      case "small":
+        activitiesActive = 1.375
+        break;
+      case "medium":
+        activitiesActive = 1.55
+        break;
+      case "high":
+        activitiesActive = 1.725
+        break;
+      
+    }
+    calculate();
+  })
+})
+height.addEventListener('input', () => { 
+validate(height)
+});
+weight.addEventListener('input', () => { 
+validate(weight)
+});
+age.addEventListener('input', () => { 
+validate(age)
+});
