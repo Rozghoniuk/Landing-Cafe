@@ -262,3 +262,52 @@ validate(weight)
 age.addEventListener('input', () => { 
 validate(age)
 });
+
+
+// -------------Timer--------------------
+
+let days = document.querySelector("#days")
+let hours = document.querySelector("#hours")
+let minutes = document.querySelector("#minutes")
+let seconds = document.querySelector("#seconds")
+let currentDate;
+let deadLine=new Date("2023/09/16");
+let difference;
+let day, hour, minute, second;
+let timer;
+
+if (deadLine > new Date()) {
+
+  function calcDifDates() {
+    currentDate = new Date();
+    difference = deadLine - currentDate;
+    day = difference / 1000 / 60 / 60 / 24;
+    hour = (difference / 1000 / 60 / 60) % 24;
+    minute = (difference / 1000 / 60) % 60;
+    second = (difference / 1000) % 60;
+    return {
+      day: Math.floor(day),
+      hour: Math.floor(hour),
+      minute: Math.floor(minute),
+      second: Math.floor(second),
+    }
+  }
+
+  function renderTimer() {
+    let object = calcDifDates();
+    if (object.second < 0) {
+      clearInterval(timer)
+    } else {
+      days.innerText = changeNum(object.day);
+      hours.innerText = changeNum(object.hour);
+      minutes.innerText = changeNum(object.minute);
+      seconds.innerText = changeNum(object.second);
+    }
+  }
+  timer = setInterval(renderTimer, 1000)
+} else { 
+  days.innerText = "00";
+    hours.innerText = "00";
+    minutes.innerText = "00";
+    seconds.innerText = "00";
+}
