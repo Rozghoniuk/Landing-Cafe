@@ -311,3 +311,85 @@ if (deadLine > new Date()) {
     minutes.innerText = "00";
     seconds.innerText = "00";
 }
+
+// ----------------SEND FORMS------------------
+
+let forms = document.querySelectorAll("form");
+let message = {
+  loading: "Loading...",
+  success: "Data sent",
+  fail: "Something wrong"
+};
+let btnForm = document.querySelectorAll("#form_btn");
+
+forms.forEach((form, i) => { 
+  form.addEventListener("submit", (event) => { 
+    event.preventDefault();
+    btnForm[i].disabled = true;
+    console.log("Hello");
+    btnForm[i].innerText = message.loading;
+    let request = new XMLHttpRequest();
+    request.open("POST", "../server.php");
+    let formData = new FormData(form);
+    let data = {};
+    formData.forEach((value, key) => { 
+      data[key] = value;
+    })
+    request.send(JSON.stringify(data));
+    request.addEventListener("load", () => { 
+      if (request.status === 200) {
+        alertModal(i, message.success, true);        
+      } else { 
+        alertModal(i, message.fail, false);
+      }
+    })
+  })
+})
+
+function alertModal(index, param, close){ 
+  setTimeout(() => {
+    btnForm[index].innerText = param;
+    setTimeout(() => { 
+      btnForm[index].innerText = "Перезвонить мне";
+      btnForm[index].disabled = false;
+      if (close) { closeModal();}
+    }, 2000)
+  }, 1000);
+}
+
+// --------------------CARDS----------------------------------
+
+function getCards() {
+  let requestCard= new XMLHttpRequest();
+  
+  requestCard.open("GET", "./data/menu.json");
+  requestCard.send();
+  requestCard.addEventListener("load", () => { 
+    if (requestCard.status === 200) {
+      let cardsArray = JSON.parse(requestCard.response);
+      console.log(cardsArray);
+      renderCards(cardsArray.cards);
+    }
+  })
+}
+
+function renderCards(arr) {
+  let cardsBox = document.querySelector(".menu__field .container");
+  let template;
+  arr.forEach((el) => {
+    template+=`   <div class="menu__item">
+            <img src=${el.img} alt=${el.title}/>
+            <h3 class="menu__item-subtitle">${el.title}</h3>
+            <div class="menu__item-descr">
+              ${el.descr}</div>
+            <div class="menu__item-divider"></div>
+            <div class="menu__item-price">
+              <div class="menu__item-cost">Цена:</div>
+              <div class="menu__item-total"><span>${el.price}</span> грн/день</div>
+            </div>
+          </div>`
+  })
+  cardsBox.innerHTML = template;
+}
+
+getCards();
